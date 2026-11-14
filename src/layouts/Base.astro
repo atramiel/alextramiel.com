@@ -1,0 +1,79 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import '@fontsource-variable/archivo/standard.css';
+import '@fontsource-variable/literata';
+import '@fontsource/share-tech-mono';
+import '../styles/global.css';
+import { SITE } from '../site';
+
+interface Props { title?: string; description?: string }
+const { title, description = SITE.description } = Astro.props;
+const fullTitle = title ? `${title} | ${SITE.name}` : SITE.name;
+const path = Astro.url.pathname;
+const nav = [
+  { href: '/work/', label: 'Work' },
+  { href: '/writing/', label: 'Writing' },
+  { href: '/about/', label: 'About' },
+];
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0b1310" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={new URL(path, Astro.site)} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate" type="application/rss+xml" title={`${SITE.name}: Writing`} href="/rss.xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <ClientRouter />
+  </head>
+  <body>
+    <canvas id="board" aria-hidden="true" transition:persist></canvas>
+    <header class="wrap site-header">
+      <a class="site-name" href="/">{SITE.name}</a>
+      <nav class="site-nav" aria-label="Main">
+        {nav.map((n) => (
+          <a href={n.href} aria-current={path.startsWith(n.href) ? 'page' : undefined}>{n.label}</a>
+        ))}
+        <button class="power" id="power" type="button" aria-pressed="true" aria-label="Board power: on. Switch off" title="Board power"></button>
+      </nav>
+    </header>
+    <main class="wrap">
+      <slot />
+    </main>
+    <footer class="wrap site-footer">
+      <span>© {new Date().getFullYear()} {SITE.name}</span>
+      <div class="parts">
+        <button class="part-puck" id="egg-puck" type="button" aria-label="Test point"></button>
+        <button class="part-chip" id="egg-chip" type="button" aria-label="Chip U13"><span></span></button>
+        <button class="part-cap" id="egg-cap" type="button" aria-label="Capacitor C1"></button>
+      </div>
+      <ul>
+        {SITE.links.map((l) => <li><a href={l.url}>{l.label}</a></li>)}
+        <li><a href="/rss.xml">RSS</a></li>
+      </ul>
+      <p class="secrets" id="secrets" hidden></p>
+    </footer>
+
+    <dialog id="arcade" aria-labelledby="arcade-title" transition:persist>
+      <div class="arcade-bar">
+        <h2 id="arcade-title">Arcade</h2>
+        <span id="arcade-score"></span>
+        <form method="dialog"><button class="arcade-close">Close</button></form>
+      </div>
+      <canvas id="arcade-canvas" width="640" height="400"></canvas>
+      <p id="arcade-help"></p>
+    </dialog>
+    <div id="toast" role="status" aria-live="polite" transition:persist></div>
+
+    <script>
+      import '../scripts/board.ts';
+    </script>
+  </body>
+</html>

@@ -1,0 +1,23 @@
+---
+import { getCollection } from 'astro:content';
+import { formatDate } from '../site';
+interface Props { limit?: number }
+const { limit } = Astro.props;
+let posts = (await getCollection('posts', (p) => !p.data.draft)).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+if (limit) posts = posts.slice(0, limit);
+---
+{posts.length === 0 ? (
+  <p>No posts yet. Add a Markdown file to <code>src/content/posts</code> to publish the first one.</p>
+) : (
+  <ul class="rows no-ref">
+    {posts.map((p) => (
+      <li>
+        <a class="row" href={`/writing/${p.id}/`}>
+          <span class="row-name">{p.data.title}</span>
+          <span class="row-summary">{p.data.description}</span>
+          <time class="row-meta" datetime={p.data.date.toISOString()}>{formatDate(p.data.date)}</time>
+        </a>
+      </li>
+    ))}
+  </ul>
+)}

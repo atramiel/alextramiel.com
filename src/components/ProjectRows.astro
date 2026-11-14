@@ -1,0 +1,26 @@
+---
+import { getCollection } from 'astro:content';
+import { GROUPS } from '../site';
+const REF = { Work: 'U', Robots: 'M', 'Home and shop': 'J' } as const;
+const all = (await getCollection('projects', (p) => !p.data.draft)).sort((a, b) => a.data.order - b.data.order);
+---
+{GROUPS.map((group) => {
+  const items = all.filter((p) => p.data.group === group);
+  return items.length > 0 && (
+    <section>
+      <h3 class="group-title">{group}</h3>
+      <ul class="rows">
+        {items.map((p, i) => (
+          <li>
+            <a class="row" href={`/work/${p.id}/`}>
+              <span class="row-ref" aria-hidden="true">{REF[group]}{i + 1}</span>
+              <span class="row-name">{p.data.title}</span>
+              <span class="row-summary">{p.data.summary}</span>
+              <span class="row-meta">{p.data.years}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+})}

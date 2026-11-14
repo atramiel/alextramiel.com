@@ -1,0 +1,41 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../site';
+
+const jobs = [
+  { when: '2024–2026', title: 'Hyphen', place: 'San Jose', what: 'Operations Manager, then Head of Operations. Manufacturing, procurement, logistics and IT for a food robotics company.', href: '/work/hyphen/' },
+  { when: '2015–2024', title: 'Palo Alto Innovation', place: 'Santa Clara', what: 'Founder and CEO. Built and shipped the Sandman Doppler smart alarm clock and ran the PAI Labs design firm.', href: '/work/sandman-doppler/' },
+  { when: '2014–2015', title: 'Focus Product Design', place: 'Menlo Park', what: 'Operations, project and IT manager. Moved client designs from prototype through manufacturing across about 600 products.' },
+  { when: '2012–2014', title: 'Perceptimed', place: 'Mountain View', what: 'Operations project manager and fifth employee. Supplier management, purchasing and image data for machine vision.' },
+];
+---
+<Base title="About" description="About Alex Tramiel: hardware operations, robots and a house full of sensors.">
+  <header class="page-head">
+    <h1 class="display page-title">About</h1>
+    <p class="lede">I've spent my career getting physical products built and delivered, usually at companies small enough that the job has no edges.</p>
+  </header>
+
+  <div class="prose">
+    <p>I live in Los Altos, California. For nine years I ran my own consumer electronics company, Palo Alto Innovation, and most recently I was Head of Operations at Hyphen, a food robotics company. Purchasing, suppliers, manufacturing, logistics and IT have all been my job, often at the same time.</p>
+    <p>Outside work I'm co-commissioner of the Bot Hockey League, I build combat robots, and I keep adding sensors to my house. I also play ice hockey and host the Pucks In Deep podcast.</p>
+    <p>I studied business administration and entrepreneurship at Notre Dame de Namur University.</p>
+    <p>The best way to reach me is <a href={SITE.links[0].url}>LinkedIn</a>.</p>
+  </div>
+
+  <h2 class="section-title history-title">Where I've worked</h2>
+  <ol class="timeline">
+    {jobs.map((j) => (
+      <li>
+        <span class="when">{j.when}</span>
+        <div>
+          <h3>{j.href ? <a href={j.href}>{j.title}</a> : j.title}, {j.place}</h3>
+          <p>{j.what}</p>
+        </div>
+      </li>
+    ))}
+  </ol>
+</Base>
+
+<style>
+  .history-title { max-width: 52rem; margin-top: 4rem; padding-bottom: 0.75rem; border-bottom: 2px solid var(--gold); margin-bottom: 0; }
+</style>
